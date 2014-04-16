@@ -1,0 +1,26 @@
+# read all .csv files (file name beginning with same characters, same data structure)
+# combine them together and keep only the header of the first table
+# export as an entity of .txt file
+
+transcsv<-function(directory = "D:/RawData",startchar = "Report"){
+
+	# directory: the directory where you put the data source
+	# startchar: the common fields/characteristics the file names start with
+	
+	setwd(directory)
+	filename <- paste(startchar, "*.csv", sep="")
+	filenames <- Sys.glob(filename) 
+	# Sys.glob extracts all files that follow the format "Report*.csv" and save into a vector
+	
+	n <- 1	
+	for (filename in filenames){
+		if (n == 1){
+			txtfile<-read.csv(filename, header = T, sep = ";") # default value of header is F
+		}else{
+			txtfile<-rbind(txtfile,read.csv(filename, sep = ";"))
+		}
+		n <- n + 1
+	}
+	newname<-paste(startchar, "_All.txt", sep="")
+	write.table(txtfile, newname, sep=";") # an arg "fileEncoding = "UTF-8" can be considered to add here
+}
